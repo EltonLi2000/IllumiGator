@@ -1,0 +1,35 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "galar dojo tiles_2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "indoor_tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "C:/Users/dakca/Illumigator Design",
+    "map.height": 30,
+    "map.lastUsedFormat": "tmx",
+    "map.width": 40,
+    "openFiles": [
+    ],
+    "project": "level_designs_prototype.tiled-project",
+    "recentFiles": [
+        "galar dojo tiles_2.tsx",
+        "indoor_tileset.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
