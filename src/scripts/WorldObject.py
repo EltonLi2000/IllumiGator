@@ -7,7 +7,6 @@ COLORS = [arcade.color.LION, arcade.color.BLUE, arcade.color.RED, arcade.color.G
           arcade.color.PURPLE, arcade.color.PINK, arcade.color.AMBER, arcade.color.ORANGE]
 
 
-
 class WorldObject(ABC):
     @abstractmethod
     def draw(self):
@@ -15,7 +14,6 @@ class WorldObject(ABC):
     # @abstractmethod
     # def distance_to_point(self, point: numpy.array):  # TODO: change to get_intersection_point()
     #     pass
-
 
 
 class Line(WorldObject):
@@ -35,14 +33,14 @@ class Line(WorldObject):
         x4 = ray.origin[0] + ray.direction[0]
         y4 = ray.origin[1] + ray.direction[1]
 
-        denominator = (x1-x2) * (y3-y4)  -  (y1-y2) * (x3-x4)
+        denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
         if denominator == 0:  # Line and ray are parallel
             return None
-        t =  ((x1-x3) * (y3-y4)  -  (y1-y3) * (x3-x4)) / denominator
-        u = -((x1-x2) * (y1-y3)  -  (y1-y2) * (x1-x3)) / denominator
+        t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
+        u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denominator
 
         if 0 < t < 1 and u > 0:
-            return numpy.array([ x1 + t * (x2-x1),   y1 + t * (y2-y1) ])
+            return numpy.array([x1 + t * (x2 - x1), y1 + t * (y2 - y1)])
         return None
 
     def draw(self):
@@ -53,7 +51,7 @@ class Mirror(Line):
     def __init__(self, point1: numpy.array, point2: numpy.array):
         super().__init__(point1, point2)
         # compute the normal of the mirror based on its rotation angle
-        normal_unscaled = numpy.array([-(point2[1]-point1[1]), point2[0]-point1[0]])
+        normal_unscaled = numpy.array([-(point2[1] - point1[1]), point2[0] - point1[0]])
         self.normal = normal_unscaled / numpy.linalg.norm(normal_unscaled)
 
     def draw(self):
@@ -61,6 +59,15 @@ class Mirror(Line):
 
     def get_reflected_direction(self, direction):
         return direction - (2 * numpy.dot(direction, self.normal) * self.normal)
+
+
+class ColorFilter(Line):
+    def __init__(self, point1: numpy.array, point2: numpy.array):
+        super().__init__(point1, point2)
+        self.color = random.choice(COLORS)
+
+    def draw(self):
+        arcade.draw_line(self.point1[0], self.point1[1], self.point2[0], self.point2[1], color=self.color)
 
 
 class Rectangle(WorldObject):
@@ -75,7 +82,7 @@ class Rectangle(WorldObject):
         arcade.draw_rectangle_filled(self.position[0], self.position[1], self.size[0], self.size[1], self.color)
 
     def distance_to_point(self, point: numpy.array) -> float:  # TODO: change to get_intersection_point()
-        distanceDifference = numpy.abs(point - self.position) - (self.size/2)
-        outsideDistance = numpy.linalg.norm( numpy.maximum(distanceDifference, numpy.zeros(2)) )
+        distanceDifference = numpy.abs(point - self.position) - (self.size / 2)
+        outsideDistance = numpy.linalg.norm(numpy.maximum(distanceDifference, numpy.zeros(2)))
         insideDistance = min(max(distanceDifference[0], distanceDifference[1]), 0)
         return outsideDistance + insideDistance
