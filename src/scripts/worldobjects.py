@@ -7,6 +7,11 @@ import geometry
 
 class WorldObject:
     sprite: arcade.Sprite
+    geometry_segments: list[geometry.Geometry]
+
+    def draw(self):
+        for segment in self.geometry_segments:
+            segment.draw()
 
 class Wall(WorldObject):
     def __init__(self, center_position: numpy.array, side_lengths: numpy.array,
@@ -22,24 +27,18 @@ class Wall(WorldObject):
         axis2 = side_lengths[1] * 0.5 * numpy.array([
             -numpy.sin(rotation_angle), numpy.cos(rotation_angle)
         ])
-        self.geometry_elements = [
+        self.geometry_segments = [
             geometry.Line(center_position - axis1 - axis2,   center_position - axis1 + axis2),
-            geometry.Line(center_position - axis1 + axis2,   center_position + axis1 + axis2, is_reflective=True),
+            geometry.Line(center_position - axis1 + axis2,   center_position + axis1 + axis2),
             geometry.Line(center_position + axis1 + axis2,   center_position + axis1 - axis2),
             geometry.Line(center_position + axis1 - axis2,   center_position - axis1 - axis2),
         ]
-
-    def draw(self):
-        # arcade.draw_rectangle_filled(self.center[0], self.center[1], self.side_lengths[0], self.side_lengths[1],
-        #                              self.color, tilt_angle=util.convert_angle_for_arcade(self.rotation_angle))
-        for edge in self.geometry_elements:
-            edge.draw()
 
     def get_intersection(self, ray) -> tuple[numpy.array, geometry.Geometry]:
         nearest_distance_squared = util.STARTING_DISTANCE_VALUE
         nearest_intersection_object = None
         nearest_intersection_point = None
-        for edge in self.geometry_elements:
+        for edge in self.geometry_segments:
             intersection_point, intersection_object = edge.get_intersection(ray)
             if intersection_point is None:
                 continue
